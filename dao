@@ -1,0 +1,101 @@
+package com.maveric.banking.daoimpl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import com.maveric.banking.dao.AccountDao;
+import com.maveric.banking.pojo.AccountDetails;
+import com.maveric.banking.utility.Constants;
+
+@Repository
+public class AccountDaoImpl implements AccountDao {
+
+	private final List<AccountDetails> accDetails = new ArrayList<>();
+	
+	private final List<AccountDetails> acDetails = new ArrayList<>();
+
+	@Override
+	public String createAccount(AccountDetails details) {
+		accDetails.add(details);
+		return "Success";
+	}
+
+	@Override
+	public String depositAmount(AccountDetails details) {
+
+		accDetails.forEach(p -> {
+			if (p.getAccNumber().equals(details.getAccNumber()) && p.getIfscCode().equals(details.getIfscCode())) {
+
+				double amount = details.getAmount() + p.getAmount();
+				
+				AccountDetails a=new AccountDetails();
+				a.setAccName(p.getAccName());
+				a.setAccNumber(p.getAccNumber());
+				a.setBranchName(p.getBranchName());
+				a.setIfscCode(p.getIfscCode());
+				a.setAmount(amount);
+				acDetails.add(a);
+
+				System.out.println(amount);
+
+			}
+
+		});
+		return Constants.DEPOSIT_SUCCESS;
+
+	}
+
+	@Override
+	public String withdrawAmount(AccountDetails details) {
+		acDetails.forEach(p -> {
+			if (p.getAccNumber().equals(details.getAccNumber()) && p.getIfscCode().equals(details.getIfscCode())) {
+
+				double amount = p.getAmount() - details.getAmount();
+
+				AccountDetails a=new AccountDetails();
+				a.setAccName(p.getAccName());
+				a.setAccNumber(p.getAccNumber());
+				a.setBranchName(p.getBranchName());
+				a.setIfscCode(p.getIfscCode());
+				a.setAmount(amount);
+				accDetails.add(a);
+				System.out.println(amount);
+
+			}
+
+		});
+		return Constants.WITHDRAW_SUCCESS;
+
+	}
+
+	@Override
+	public void showBalance(String accNumber) {
+
+		accDetails.forEach(p -> {
+			if (p.getAccNumber().equals(p.getAccNumber()) && p.getIfscCode().equals(p.getIfscCode())) {
+
+				final double amount = p.getAmount();
+
+				System.out.println(amount);
+
+			}
+
+		});
+
+	}
+
+	@Override
+	public void showTransactions(AccountDetails acc) {
+
+		accDetails.forEach(p -> {
+
+			System.out.println(withdrawAmount(p));
+			System.out.println(depositAmount(p));
+
+		});
+
+	}
+
+}
